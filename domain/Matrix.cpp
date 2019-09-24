@@ -34,7 +34,6 @@ void Matrix::setValues(double **values) {
 
 Matrix::~Matrix() {
     delete matrixValues;
-    matrixIndex = NULL;
 }
 
 void Matrix::multiplyWith(Matrix *otherMatrix) {
@@ -54,6 +53,7 @@ void Matrix::multiplyWith(Matrix *otherMatrix) {
                 matrixValues[i][j] += copyValues[i][k] * otherValues[k][j];
         }
     }
+    delete[] copyValues;
 }
 
 void Matrix::invert() {
@@ -83,6 +83,7 @@ void Matrix::invert() {
     for (int i = 0; i < index; i++)
         for (int j = 0; j < index; j++)
             matrix[i][j] = invertValues[i][j];
+    delete[] invertValues;
 }
 
 double Matrix::getDeterminant() {

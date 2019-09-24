@@ -24,11 +24,16 @@ const int NEW_INPUT_CODE = 7;
 void MainView::startMenu() {
 
     int code;
-    bool state = true;
     cout << INPUT_TEXT << endl;
-    inputNewMatrix();
+    cout << INPUT_INDEX_TEXT << endl;
+    int baseIndex;
+    cin >> baseIndex;
+    matrixIndex = baseIndex;
+    auto **baseValues = new double *[baseIndex];
+    inputMatrixValues(baseIndex, baseValues);
+    presenter->setMatrix(baseIndex, baseValues);
 
-    while (state) {
+    while (true) {
         cout
                 << TRANSPOSE_TEXT
                 << SUM_TEXT
@@ -50,6 +55,7 @@ void MainView::startMenu() {
                 auto **values = new double *[index];
                 inputMatrixValues(index, values);
                 presenter->sumMatrix(values);
+                delete[] values;
                 break;
             }
             case MULTIPLY_CODE: {
@@ -58,6 +64,7 @@ void MainView::startMenu() {
                 auto **values = new double *[index];
                 inputMatrixValues(index, values);
                 presenter->multiplyMatrix(values);
+                delete[] values;
                 break;
             }
             case INVERT_CODE: {
@@ -73,10 +80,23 @@ void MainView::startMenu() {
                 break;
             }
             case NEW_INPUT_CODE: {
-                inputNewMatrix();
+                delete[] baseValues;
+                cout << INPUT_INDEX_TEXT << endl;
+                cin >> baseIndex;
+                matrixIndex = baseIndex;
+                baseValues = new double *[baseIndex];
+                for (int i = 0; i < baseIndex; i++) {
+                    baseValues[i] = new double[baseIndex];
+                }
+                for (int i = 0; i < baseIndex; i++)
+                    for (int j = 0; j < baseIndex; j++) {
+                        cin >> baseValues[i][j];
+                    }
+                presenter->setMatrix(baseIndex, baseValues);
                 break;
             }
             default:
+                delete[] baseValues;
                 exit(0);
         }
 
@@ -102,7 +122,6 @@ void MainView::printMatrix() {
 
 MainView::~MainView() {
     delete presenter;
-    matrixIndex = NULL;
 }
 
 void MainView::inputMatrixValues(int index, double **values) {
@@ -113,14 +132,4 @@ void MainView::inputMatrixValues(int index, double **values) {
         for (int j = 0; j < index; j++) {
             cin >> values[i][j];
         }
-}
-
-void MainView::inputNewMatrix() {
-    cout << INPUT_INDEX_TEXT << endl;
-    int baseIndex;
-    cin >> baseIndex;
-    matrixIndex = baseIndex;
-    auto **baseValues = new double *[baseIndex];
-    inputMatrixValues(baseIndex, baseValues);
-    presenter->setMatrix(baseIndex, baseValues);
 }
