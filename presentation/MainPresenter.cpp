@@ -32,3 +32,7 @@ void MainPresenter::multiplyMatrix(double **otherMatrix) {
 void MainPresenter::invertMatrix() {
     matrixOperator->invertMatrix();
 }
+
+double MainPresenter::getMatrixDeterminant() {
+    return matrixOperator->getMatrixDeterminant();
+}

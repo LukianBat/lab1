@@ -10,9 +10,11 @@ private:
 
     void inputMatrixValues(int index, double **values);
 
+    void inputNewMatrix();
+
     void startMenu();
 
-    void printResult();
+    void printMatrix();
 
 public:
 

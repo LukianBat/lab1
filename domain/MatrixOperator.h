@@ -25,6 +25,8 @@ public:
 
     void invertMatrix();
 
+    double getMatrixDeterminant();
+
     ~MatrixOperator();
 };
 

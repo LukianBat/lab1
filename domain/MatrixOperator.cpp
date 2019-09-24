@@ -1,9 +1,11 @@
 #include "MatrixOperator.h"
+#include "iostream"
 
 void MatrixOperator::setMatrix(int index, double **values) {
 
     this->firstMatrix->setIndex(index);
     this->firstMatrix->setValues(values);
+
 }
 
 void MatrixOperator::transposeMatrix() {
@@ -38,4 +40,8 @@ void MatrixOperator::multiplyMatrix(double **otherValues) {
 
 void MatrixOperator::invertMatrix() {
     firstMatrix->invert();
+}
+
+double MatrixOperator::getMatrixDeterminant() {
+    return firstMatrix->getDeterminant();
 }

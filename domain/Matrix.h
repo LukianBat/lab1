@@ -7,7 +7,9 @@ class Matrix {
 private:
     int matrixIndex;
     double **matrixValues;
+    double calculateDeterminant(double** values, int index);
 public:
+
 
     void setIndex(int index);
 
@@ -22,6 +24,8 @@ public:
     void multiplyWith(Matrix *otherMatrix);
 
     void invert();
+
+    double getDeterminant();
 
     ~Matrix();
 };

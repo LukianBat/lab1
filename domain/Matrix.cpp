@@ -3,12 +3,12 @@
 
 
 void Matrix::transpose() {
-    double t;
+    double value;
     for (int i = 0; i < matrixIndex; ++i) {
         for (int j = i; j < matrixIndex; ++j) {
-            t = matrixValues[i][j];
+            value = matrixValues[i][j];
             matrixValues[i][j] = matrixValues[j][i];
-            matrixValues[j][i] = t;
+            matrixValues[j][i] = value;
         }
     }
 }
@@ -39,7 +39,7 @@ Matrix::~Matrix() {
 
 void Matrix::multiplyWith(Matrix *otherMatrix) {
     double **otherValues = otherMatrix->matrixValues;
-    double **copyValues = new double *[matrixIndex];
+    auto **copyValues = new double *[matrixIndex];
     for (int i = 0; i < matrixIndex; i++) {
         copyValues[i] = new double[matrixIndex];
     }
@@ -59,22 +59,18 @@ void Matrix::multiplyWith(Matrix *otherMatrix) {
 void Matrix::invert() {
     double **matrix = matrixValues;
     int index = matrixIndex;
-    double **invertValues = new double *[index];
-    // инициализация
+    auto **invertValues = new double *[index];
     for (int i = 0; i < index; i++)
         invertValues[i] = new double[index];
     for (int i = 0; i < index; i++)
         for (int j = 0; j < index; j++)
             invertValues[i][j] = (i == j ? 1 : 0);
-    // converting matrix to invertValues
     for (int i = 0; i < index; i++) {
-        // normalizing row (making first value =1)
         double value = matrix[i][i];
         for (int j = index - 1; j >= 0; j--) {
             invertValues[i][j] /= value;
             matrix[i][j] /= value;
         }
-        // excluding i-th value from each row except i-th one
         for (int j = 0; j < index; j++)
             if (j != i) {
                 value = matrix[j][i];
@@ -84,8 +80,35 @@ void Matrix::invert() {
                 }
             }
     }
-    // now invertValues contains inverted matrix so we need only to copy invertValues to matrix
     for (int i = 0; i < index; i++)
         for (int j = 0; j < index; j++)
             matrix[i][j] = invertValues[i][j];
+}
+
+double Matrix::getDeterminant() {
+    return calculateDeterminant(matrixValues, matrixIndex);
+}
+
+double Matrix::calculateDeterminant(double **values, int index) {
+    int i, j;
+    double determinant = 0;
+    double **matrix;
+    if (index == 1) {
+        determinant = values[0][0];
+    } else if (index == 2) {
+        determinant = values[0][0] * values[1][1] - values[0][1] * values[1][0];
+    } else {
+        matrix = new double *[index - 1];
+        for (i = 0; i < index; ++i) {
+            for (j = 0; j < index - 1; ++j) {
+                if (j < i)
+                    matrix[j] = values[j];
+                else
+                    matrix[j] = values[j + 1];
+            }
+            determinant += pow((double) -1, (i + j)) * calculateDeterminant(matrix, index - 1) * values[i][index - 1];
+        }
+        delete[] matrix;
+    }
+    return determinant;
 }

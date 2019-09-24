@@ -22,6 +22,8 @@ public:
 
     double **getMatrix();
 
+    double getMatrixDeterminant();
+
     ~MainPresenter();
 };
 
