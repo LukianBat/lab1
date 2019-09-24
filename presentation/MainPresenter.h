@@ -10,13 +10,17 @@ private:
 public:
     explicit MainPresenter(MatrixOperator *anOperator);
 
-    void setMatrix(int index, int **values);
+    void setMatrix(int index, double **values);
 
     void transposeMatrix();
 
-    void sumMatrix(int **otherMatrix);
+    void sumMatrix(double **otherMatrix);
 
-    int **getMatrix();
+    void multiplyMatrix(double **otherMatrix);
+
+    void invertMatrix();
+
+    double **getMatrix();
 
     ~MainPresenter();
 };

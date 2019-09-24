@@ -13,13 +13,17 @@ public:
 
     MatrixOperator();
 
-    void setMatrix(int index, int **values);
+    void setMatrix(int index, double **values);
 
     void transposeMatrix();
 
-    int **getMatrix();
+    double **getMatrix();
 
-    void sumMatrix(int **otherValues);
+    void sumMatrix(double **otherValues);
+
+    void multiplyMatrix(double **otherValues);
+
+    void invertMatrix();
 
     ~MatrixOperator();
 };

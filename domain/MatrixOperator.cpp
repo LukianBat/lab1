@@ -1,6 +1,6 @@
 #include "MatrixOperator.h"
 
-void MatrixOperator::setMatrix(int index, int **values) {
+void MatrixOperator::setMatrix(int index, double **values) {
 
     this->firstMatrix->setIndex(index);
     this->firstMatrix->setValues(values);
@@ -10,11 +10,11 @@ void MatrixOperator::transposeMatrix() {
     firstMatrix->transpose();
 }
 
-int **MatrixOperator::getMatrix() {
+double **MatrixOperator::getMatrix() {
     return this->firstMatrix->getValues();
 }
 
-void MatrixOperator::sumMatrix(int **otherValues) {
+void MatrixOperator::sumMatrix(double **otherValues) {
     secondMatrix->setValues(otherValues);
     firstMatrix->sumWith(secondMatrix);
 }
@@ -29,4 +29,13 @@ MatrixOperator::MatrixOperator() {
 MatrixOperator::~MatrixOperator() {
     delete secondMatrix;
     delete firstMatrix;
+}
+
+void MatrixOperator::multiplyMatrix(double **otherValues) {
+    secondMatrix->setValues(otherValues);
+    firstMatrix->multiplyWith(secondMatrix);
+}
+
+void MatrixOperator::invertMatrix() {
+    firstMatrix->invert();
 }

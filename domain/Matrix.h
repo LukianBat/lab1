@@ -6,18 +6,22 @@
 class Matrix {
 private:
     int matrixIndex;
-    int **matrixValues;
+    double **matrixValues;
 public:
 
     void setIndex(int index);
 
-    void setValues(int **values);
+    void setValues(double **values);
 
     void transpose();
 
-    int **getValues();
+    double **getValues();
 
     void sumWith(Matrix *otherMatrix);
+
+    void multiplyWith(Matrix *otherMatrix);
+
+    void invert();
 
     ~Matrix();
 };
