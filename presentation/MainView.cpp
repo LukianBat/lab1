@@ -68,7 +68,11 @@ void MainView::startMenu() {
                 break;
             }
             case INVERT_CODE: {
-                presenter->invertMatrix();
+                try {
+                    presenter->invertMatrix();
+                } catch (exception exc) {
+                    cout << exc.what() << endl;
+                }
                 break;
             }
             case OUTPUT_CODE: {

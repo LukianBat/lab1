@@ -1,5 +1,7 @@
 #include "MainPresenter.h"
+#include <iostream>
 
+const char *INVERTING_ERROR_MESSAGE = "inverting matrix error";
 
 double **MainPresenter::getMatrix() {
     return matrixOperator->getMatrix();
@@ -29,8 +31,12 @@ void MainPresenter::multiplyMatrix(double **otherMatrix) {
     matrixOperator->multiplyMatrix(otherMatrix);
 }
 
-void MainPresenter::invertMatrix() {
-    matrixOperator->invertMatrix();
+void MainPresenter::invertMatrix() noexcept(false) {
+    if (matrixOperator->getMatrixDeterminant() != 0) {
+        matrixOperator->invertMatrix();
+    } else {
+        throw std::exception(INVERTING_ERROR_MESSAGE);
+    }
 }
 
 double MainPresenter::getMatrixDeterminant() {

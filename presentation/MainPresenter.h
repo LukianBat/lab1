@@ -18,7 +18,7 @@ public:
 
     void multiplyMatrix(double **otherMatrix);
 
-    void invertMatrix();
+    void invertMatrix() noexcept(false);
 
     double **getMatrix();
 
