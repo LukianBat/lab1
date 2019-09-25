@@ -27,11 +27,10 @@ void MainView::startMenu() {
     cout << INPUT_TEXT << endl;
     cout << INPUT_INDEX_TEXT << endl;
     int baseIndex;
-    cin >> baseIndex;
-    matrixIndex = baseIndex;
-    auto **baseValues = new double *[baseIndex];
-    inputMatrixValues(baseIndex, baseValues);
-    Matrix baseMatrix(baseIndex, baseValues);
+    cin >> matrixIndex;
+    auto **baseValues = new double *[matrixIndex];
+    inputMatrixValues(matrixIndex, baseValues);
+    Matrix baseMatrix(matrixIndex, baseValues);
     presenter->setMatrix(&baseMatrix);
     while (true) {
         cout
@@ -86,16 +85,12 @@ void MainView::startMenu() {
             case NEW_INPUT_CODE: {
                 delete[] baseValues;
                 cout << INPUT_INDEX_TEXT << endl;
-                cin >> baseIndex;
-                baseValues = new double *[baseIndex];
-                for (int i = 0; i < baseIndex; i++) {
-                    baseValues[i] = new double[baseIndex];
-                }
-                for (int i = 0; i < baseIndex; i++)
-                    for (int j = 0; j < baseIndex; j++) {
-                        cin >> baseValues[i][j];
-                    }
-                presenter->setMatrixParameters(baseIndex, baseValues);
+                int index;
+                cin >> index;
+                matrixIndex = index;
+                baseValues = new double *[index];
+                inputMatrixValues(index, baseValues);
+                presenter->setMatrixParameters(index, baseValues);
                 break;
             }
             default:
