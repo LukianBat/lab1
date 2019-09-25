@@ -1,44 +1,47 @@
 #include "MainPresenter.h"
 #include <iostream>
 
-const char *INVERTING_ERROR_MESSAGE = "inverting matrix error";
-
 double **MainPresenter::getMatrix() {
-    return matrixOperator->getMatrix();
+    return matrixOperator->getMatrixValues();
 }
 
 MainPresenter::MainPresenter(MatrixOperator *anOperator) {
     matrixOperator = anOperator;
 }
 
-void MainPresenter::setMatrix(int index, double **values) {
-    matrixOperator->setMatrix(index, values);
+void MainPresenter::setMatrix(Matrix *matrix) {
+    matrixOperator->baseMatrixInit(matrix);
 }
 
 void MainPresenter::transposeMatrix() {
     matrixOperator->transposeMatrix();
 }
 
-void MainPresenter::sumMatrix(double **otherMatrix) {
-    matrixOperator->sumMatrix(otherMatrix);
+void MainPresenter::sumMatrix(double **values) {
+    matrixOperator->sumMatrix(values);
 }
 
 MainPresenter::~MainPresenter() {
     delete matrixOperator;
 }
 
-void MainPresenter::multiplyMatrix(double **otherMatrix) {
-    matrixOperator->multiplyMatrix(otherMatrix);
+void MainPresenter::multiplyMatrix(double **values) {
+    matrixOperator->multiplyMatrix(values);
 }
 
 void MainPresenter::invertMatrix() noexcept(false) {
-    if (matrixOperator->getMatrixDeterminant() != 0) {
+    try {
         matrixOperator->invertMatrix();
-    } else {
-        throw std::exception(INVERTING_ERROR_MESSAGE);
+    }
+    catch (std::exception ex) {
+        throw ex;
     }
 }
 
 double MainPresenter::getMatrixDeterminant() {
     return matrixOperator->getMatrixDeterminant();
+}
+
+void MainPresenter::setMatrixParameters(int index, double **values) {
+    matrixOperator->setMatrixParameters(index, values);
 }

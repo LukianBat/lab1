@@ -5,15 +5,22 @@
 
 class Matrix {
 private:
-    int matrixIndex;
-    double **matrixValues;
-    double calculateDeterminant(double** values, int index);
+    int matrixIndex{};
+    double **matrixValues{};
+
+    double calculateDeterminant(double **values, int index);
+
 public:
 
+    Matrix();
 
-    void setIndex(int index);
+    Matrix(int index, double **values);
+
+    int getIndex();
 
     void setValues(double **values);
+
+    void setIndex(int index);
 
     void transpose();
 

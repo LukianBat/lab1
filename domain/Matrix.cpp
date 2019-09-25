@@ -3,6 +3,7 @@
 
 
 void Matrix::transpose() {
+
     double value;
     for (int i = 0; i < matrixIndex; ++i) {
         for (int j = i; j < matrixIndex; ++j) {
@@ -11,6 +12,7 @@ void Matrix::transpose() {
             matrixValues[j][i] = value;
         }
     }
+
 }
 
 double **Matrix::getValues() {
@@ -18,10 +20,9 @@ double **Matrix::getValues() {
 }
 
 void Matrix::sumWith(Matrix *otherMatrix) {
-    double **otherValues = otherMatrix->matrixValues;
     for (int i = 0; i < matrixIndex; i++)
         for (int j = 0; j < matrixIndex; j++)
-            matrixValues[i][j] = matrixValues[i][j] + otherValues[i][j];
+            matrixValues[i][j] = matrixValues[i][j] + otherMatrix->matrixValues[i][j];
 }
 
 void Matrix::setIndex(int index) {
@@ -37,23 +38,25 @@ Matrix::~Matrix() {
 }
 
 void Matrix::multiplyWith(Matrix *otherMatrix) {
+
     double **otherValues = otherMatrix->matrixValues;
     auto **copyValues = new double *[matrixIndex];
-    for (int i = 0; i < matrixIndex; i++) {
+    for (int i = 0; i < this->matrixIndex; i++) {
         copyValues[i] = new double[matrixIndex];
     }
-    for (int i = 0; i < matrixIndex; i++) {
-        for (int j = 0; j < matrixIndex; j++)
-            copyValues[i][j] = matrixValues[i][j];
+    for (int i = 0; i < this->matrixIndex; i++) {
+        for (int j = 0; j < this->matrixIndex; j++)
+            copyValues[i][j] = this->matrixValues[i][j];
     }
-    for (int i = 0; i < matrixIndex; i++) {
-        for (int j = 0; j < matrixIndex; j++) {
+    for (int i = 0; i < this->matrixIndex; i++) {
+        for (int j = 0; j < this->matrixIndex; j++) {
             matrixValues[i][j] = 0;
-            for (int k = 0; k < matrixIndex; k++)
-                matrixValues[i][j] += copyValues[i][k] * otherValues[k][j];
+            for (int k = 0; k < this->matrixIndex; k++)
+                this->matrixValues[i][j] += copyValues[i][k] * otherValues[k][j];
         }
     }
     delete[] copyValues;
+
 }
 
 void Matrix::invert() {
@@ -84,6 +87,7 @@ void Matrix::invert() {
         for (int j = 0; j < index; j++)
             matrix[i][j] = invertValues[i][j];
     delete[] invertValues;
+
 }
 
 double Matrix::getDeterminant() {
@@ -91,6 +95,7 @@ double Matrix::getDeterminant() {
 }
 
 double Matrix::calculateDeterminant(double **values, int index) {
+
     int i, j;
     double determinant = 0;
     double **matrix;
@@ -107,9 +112,25 @@ double Matrix::calculateDeterminant(double **values, int index) {
                 else
                     matrix[j] = values[j + 1];
             }
-            determinant += pow((double) -1, (i + j)) * calculateDeterminant(matrix, index - 1) * values[i][index - 1];
+            determinant +=
+                    pow((double) -1, (i + j)) * calculateDeterminant(matrix, index - 1) * values[i][index - 1];
         }
         delete[] matrix;
     }
     return determinant;
+
 }
+
+Matrix::Matrix(int index, double **values) {
+    matrixIndex = index;
+    matrixValues = values;
+}
+
+int Matrix::getIndex() {
+    return matrixIndex;
+}
+
+Matrix::Matrix() {
+
+}
+

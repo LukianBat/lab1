@@ -31,8 +31,8 @@ void MainView::startMenu() {
     matrixIndex = baseIndex;
     auto **baseValues = new double *[baseIndex];
     inputMatrixValues(baseIndex, baseValues);
-    presenter->setMatrix(baseIndex, baseValues);
-
+    Matrix baseMatrix(baseIndex, baseValues);
+    presenter->setMatrix(&baseMatrix);
     while (true) {
         cout
                 << TRANSPOSE_TEXT
@@ -87,7 +87,6 @@ void MainView::startMenu() {
                 delete[] baseValues;
                 cout << INPUT_INDEX_TEXT << endl;
                 cin >> baseIndex;
-                matrixIndex = baseIndex;
                 baseValues = new double *[baseIndex];
                 for (int i = 0; i < baseIndex; i++) {
                     baseValues[i] = new double[baseIndex];
@@ -96,7 +95,7 @@ void MainView::startMenu() {
                     for (int j = 0; j < baseIndex; j++) {
                         cin >> baseValues[i][j];
                     }
-                presenter->setMatrix(baseIndex, baseValues);
+                presenter->setMatrixParameters(baseIndex, baseValues);
                 break;
             }
             default:

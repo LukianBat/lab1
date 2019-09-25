@@ -1,47 +1,53 @@
+#include <exception>
 #include "MatrixOperator.h"
-#include "iostream"
 
-void MatrixOperator::setMatrix(int index, double **values) {
-
-    this->firstMatrix->setIndex(index);
-    this->firstMatrix->setValues(values);
-
-}
+const char *INVERTING_ERROR_MESSAGE = "inverting matrix error";
 
 void MatrixOperator::transposeMatrix() {
-    firstMatrix->transpose();
+    baseMatrix->transpose();
 }
 
-double **MatrixOperator::getMatrix() {
-    return this->firstMatrix->getValues();
+double **MatrixOperator::getMatrixValues() {
+    return this->baseMatrix->getValues();
 }
 
-void MatrixOperator::sumMatrix(double **otherValues) {
-    secondMatrix->setValues(otherValues);
-    firstMatrix->sumWith(secondMatrix);
+void MatrixOperator::sumMatrix(double **values) {
+    operationMatrix->setIndex(baseMatrix->getIndex());
+    operationMatrix->setValues(values);
+    baseMatrix->sumWith(operationMatrix);
 }
 
-MatrixOperator::MatrixOperator() {
-    Matrix firstMatrix{};
-    Matrix secondMatrix{};
-    this->firstMatrix = &firstMatrix;
-    this->secondMatrix = &secondMatrix;
+void MatrixOperator::multiplyMatrix(double **values) {
+    operationMatrix->setIndex(baseMatrix->getIndex());
+    operationMatrix->setValues(values);
+    baseMatrix->multiplyWith(operationMatrix);
 }
 
-MatrixOperator::~MatrixOperator() {
-    delete secondMatrix;
-    delete firstMatrix;
-}
-
-void MatrixOperator::multiplyMatrix(double **otherValues) {
-    secondMatrix->setValues(otherValues);
-    firstMatrix->multiplyWith(secondMatrix);
-}
-
-void MatrixOperator::invertMatrix() {
-    firstMatrix->invert();
+void MatrixOperator::invertMatrix() noexcept(false) {
+    if (baseMatrix->getDeterminant() == 0) {
+        throw std::exception(INVERTING_ERROR_MESSAGE);
+    }
+    baseMatrix->invert();
 }
 
 double MatrixOperator::getMatrixDeterminant() {
-    return firstMatrix->getDeterminant();
+    return baseMatrix->getDeterminant();
+}
+
+MatrixOperator::~MatrixOperator() {
+    delete baseMatrix;
+}
+
+void MatrixOperator::baseMatrixInit(Matrix *matrix) {
+    this->baseMatrix = matrix;
+}
+
+void MatrixOperator::setMatrixParameters(int index, double **values) {
+    baseMatrix->setIndex(index);
+    baseMatrix->setValues(values);
+}
+
+MatrixOperator::MatrixOperator() {
+    Matrix matrix{};
+    this->operationMatrix = &matrix;
 }

@@ -7,23 +7,25 @@
 
 class MatrixOperator {
 private:
-    Matrix *firstMatrix;
-    Matrix *secondMatrix;
+    Matrix *baseMatrix;
+    Matrix *operationMatrix;
 public:
 
     MatrixOperator();
 
-    void setMatrix(int index, double **values);
+    void baseMatrixInit(Matrix *matrix);
+
+    void setMatrixParameters(int index, double **values);
 
     void transposeMatrix();
 
-    double **getMatrix();
+    double **getMatrixValues();
 
-    void sumMatrix(double **otherValues);
+    void sumMatrix(double **values);
 
-    void multiplyMatrix(double **otherValues);
+    void multiplyMatrix(double **values);
 
-    void invertMatrix();
+    void invertMatrix() noexcept(false);
 
     double getMatrixDeterminant();
 
