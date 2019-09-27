@@ -1,10 +1,8 @@
-#include "domain/MatrixOperator.h"
-#include "presentation/MainPresenter.h"
-#include "presentation/MainView.h"
+#include "MainView.h"
+
 
 int main() {
-    MatrixOperator matrixOperator{};
-    MainPresenter presenter(&matrixOperator);
-    MainView view(&presenter);
+    MainView view{};
+
     return 0;
 }
