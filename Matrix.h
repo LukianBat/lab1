@@ -14,11 +14,17 @@ private:
 
     void memoryExpansion(Matrix &matrix);
 
+    void sumWith(Matrix &otherMatrix);
+
+    void diffWith(Matrix &otherMatrix);
+
+    void multiplyWith(Matrix &otherMatrix);
+
 public:
 
     Matrix();
 
-    Matrix(int index);
+    explicit Matrix(int index);
 
     Matrix(int index, double **values);
 
@@ -26,11 +32,11 @@ public:
 
     Matrix &operator=(const Matrix &matrix);
 
-    Matrix operator+(Matrix &matrix);
+    Matrix operator+(Matrix &matrix) noexcept(false);
 
-    Matrix operator-(Matrix &matrix);
+    Matrix operator-(Matrix &matrix) noexcept(false);
 
-    Matrix operator*(Matrix &matrix);
+    Matrix operator*(Matrix &matrix) noexcept(false);
 
     const double *operator[](int index) const;
 
@@ -51,12 +57,6 @@ public:
     void transpose();
 
     double **getValues();
-
-    void sumWith(Matrix &otherMatrix);
-
-    void diffWith(Matrix &otherMatrix);
-
-    void multiplyWith(Matrix &otherMatrix);
 
     void invert();
 

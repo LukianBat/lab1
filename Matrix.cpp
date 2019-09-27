@@ -4,6 +4,7 @@
 
 using namespace std;
 const char *ERROR_INVERTING_MESSAGE = "error inverting";
+const char *ERROR_SIZE_MESSAGE = "error: sizes of matrix are not equals";
 
 Matrix::Matrix() {
     matrixIndex = 0;
@@ -63,35 +64,46 @@ Matrix &Matrix::operator=(const Matrix &matrix) {
     return *this;
 }
 
-Matrix Matrix::operator+(Matrix &matrix) {
-    Matrix sumMatrix;
-    sumMatrix.matrixIndex = this->matrixIndex;
-    sumMatrix.matrixValues = new double *[sumMatrix.matrixIndex];
-    memoryExpansion(sumMatrix);
-    sumMatrix.sumWith(*this);
-    sumMatrix.sumWith(matrix);
-    return sumMatrix;
+Matrix Matrix::operator+(Matrix &matrix) noexcept(false) {
+    if (matrix.getIndex() == this->getIndex()) {
+        Matrix sumMatrix;
+        sumMatrix.matrixIndex = this->matrixIndex;
+        sumMatrix.matrixValues = new double *[sumMatrix.matrixIndex];
+        memoryExpansion(sumMatrix);
+        sumMatrix.sumWith(*this);
+        sumMatrix.sumWith(matrix);
+        return sumMatrix;
+    } else {
+        throw exception(ERROR_SIZE_MESSAGE);
+    }
 }
 
-Matrix Matrix::operator-(Matrix &matrix) {
-    Matrix diffMatrix;
-    diffMatrix.matrixIndex = this->matrixIndex;
-    diffMatrix.matrixValues = new double *[diffMatrix.matrixIndex];
-    memoryExpansion(diffMatrix);
-    diffMatrix.sumWith(*this);
-    diffMatrix.diffWith(matrix);
-    return Matrix();
+Matrix Matrix::operator-(Matrix &matrix) noexcept(false) {
+    if (matrix.getIndex() == this->getIndex()) {
+        Matrix diffMatrix;
+        diffMatrix.matrixIndex = this->matrixIndex;
+        diffMatrix.matrixValues = new double *[diffMatrix.matrixIndex];
+        memoryExpansion(diffMatrix);
+        diffMatrix.sumWith(*this);
+        diffMatrix.diffWith(matrix);
+        return Matrix();
+    } else {
+        throw exception(ERROR_SIZE_MESSAGE);
+    }
 }
 
-
-Matrix Matrix::operator*(Matrix &matrix) {
-    Matrix multMatrix;
-    multMatrix.matrixIndex = this->matrixIndex;
-    multMatrix.matrixValues = new double *[multMatrix.matrixIndex];
-    memoryExpansion(multMatrix);
-    multMatrix.sumWith(*this);
-    multMatrix.multiplyWith(matrix);
-    return multMatrix;
+Matrix Matrix::operator*(Matrix &matrix) noexcept(false) {
+    if (matrix.getIndex() == this->getIndex()) {
+        Matrix multMatrix;
+        multMatrix.matrixIndex = this->matrixIndex;
+        multMatrix.matrixValues = new double *[multMatrix.matrixIndex];
+        memoryExpansion(multMatrix);
+        multMatrix.sumWith(*this);
+        multMatrix.multiplyWith(matrix);
+        return multMatrix;
+    } else {
+        throw exception(ERROR_SIZE_MESSAGE);
+    }
 }
 
 const double *Matrix::operator[](int index) const {
@@ -284,4 +296,3 @@ void Matrix::memoryExpansion(Matrix &matrix) {
         }
     }
 }
-
