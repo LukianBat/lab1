@@ -1,18 +1,22 @@
 #include <iostream>
 #include <fstream>
+#include <cmath>
 #include "Matrix.h"
 
 using namespace std;
-const char *ERROR_INVERTING_MESSAGE = "error inverting";
-const char *ERROR_SIZE_MESSAGE = "error: sizes of matrix are not equals";
+exception ERROR_INVERTING_MESSAGE = (const exception &) "error inverting";
+exception ERROR_SIZE_MESSAGE = (const exception &) "error: sizes of matrix are not equals";
+
+int Matrix::count = 0;
 
 Matrix::Matrix() {
+    Matrix::count++;
     matrixIndex = 0;
     matrixValues = nullptr;
 }
 
-
 Matrix::Matrix(int index) {
+    Matrix::count++;
     matrixIndex = index;
     matrixValues = new double *[matrixIndex];
     for (int i = 0; i < matrixIndex; i++) {
@@ -24,6 +28,7 @@ Matrix::Matrix(int index) {
 }
 
 Matrix::Matrix(int index, double **values) {
+    Matrix::count++;
     matrixIndex = index;
     matrixValues = new double *[matrixIndex];
     for (int i = 0; i < matrixIndex; i++) {
@@ -35,10 +40,15 @@ Matrix::Matrix(int index, double **values) {
 }
 
 Matrix::~Matrix() {
-    delete matrixValues;
+    Matrix::count--;
+    for (int i = 0; i < this->matrixIndex; i++) {
+        delete[] matrixValues[i];
+    }
+    delete[] matrixValues;
 }
 
 Matrix::Matrix(const Matrix &copyMatrix) {
+    Matrix::count++;
     matrixIndex = copyMatrix.matrixIndex;
     matrixValues = new double *[matrixIndex];
     for (int i = 0; i < matrixIndex; i++) {
@@ -64,55 +74,18 @@ Matrix &Matrix::operator=(const Matrix &matrix) {
     return *this;
 }
 
-Matrix Matrix::operator+(Matrix &matrix) noexcept(false) {
-    if (matrix.getIndex() == this->getIndex()) {
-        Matrix sumMatrix;
-        sumMatrix.matrixIndex = this->matrixIndex;
-        sumMatrix.matrixValues = new double *[sumMatrix.matrixIndex];
-        memoryExpansion(sumMatrix);
-        sumMatrix.sumWith(*this);
-        sumMatrix.sumWith(matrix);
-        return sumMatrix;
-    } else {
-        throw exception(ERROR_SIZE_MESSAGE);
-    }
+Matrix Matrix::operator+(Matrix &matrix) {
+    return this->sumWith(matrix);
 }
 
-Matrix Matrix::operator-(Matrix &matrix) noexcept(false) {
-    if (matrix.getIndex() == this->getIndex()) {
-        Matrix diffMatrix;
-        diffMatrix.matrixIndex = this->matrixIndex;
-        diffMatrix.matrixValues = new double *[diffMatrix.matrixIndex];
-        memoryExpansion(diffMatrix);
-        diffMatrix.sumWith(*this);
-        diffMatrix.diffWith(matrix);
-        return Matrix();
-    } else {
-        throw exception(ERROR_SIZE_MESSAGE);
-    }
+Matrix Matrix::operator-(Matrix &matrix) {
+    return this->diffWith(matrix);
 }
 
-Matrix Matrix::operator*(Matrix &matrix) noexcept(false) {
-    if (matrix.getIndex() == this->getIndex()) {
-        Matrix multMatrix;
-        multMatrix.matrixIndex = this->matrixIndex;
-        multMatrix.matrixValues = new double *[multMatrix.matrixIndex];
-        memoryExpansion(multMatrix);
-        multMatrix.sumWith(*this);
-        multMatrix.multiplyWith(matrix);
-        return multMatrix;
-    } else {
-        throw exception(ERROR_SIZE_MESSAGE);
-    }
+Matrix Matrix::operator*(Matrix &matrix) {
+    return this->multiplyWith(matrix);
 }
 
-const double *Matrix::operator[](int index) const {
-    return matrixValues[index];
-}
-
-double *Matrix::operator[](int index) {
-    return matrixValues[index];
-}
 
 double Matrix::operator()() {
     return getDeterminant();
@@ -168,8 +141,7 @@ ifstream &operator>>(ifstream &is, Matrix &matrix) {
     return is;
 }
 
-void Matrix::transpose() {
-
+Matrix &Matrix::transpose() {
     double value;
     for (int i = 0; i < matrixIndex; ++i) {
         for (int j = i; j < matrixIndex; ++j) {
@@ -178,48 +150,59 @@ void Matrix::transpose() {
             matrixValues[j][i] = value;
         }
     }
-
+    return *this;
 }
 
-double **Matrix::getValues() {
-    return matrixValues;
-}
-
-void Matrix::sumWith(Matrix &otherMatrix) {
-    for (int i = 0; i < matrixIndex; i++)
-        for (int j = 0; j < matrixIndex; j++)
-            matrixValues[i][j] = matrixValues[i][j] + otherMatrix.matrixValues[i][j];
-}
-
-void Matrix::diffWith(Matrix &otherMatrix) {
-    for (int i = 0; i < matrixIndex; i++)
-        for (int j = 0; j < matrixIndex; j++)
-            matrixValues[i][j] = matrixValues[i][j] - otherMatrix.matrixValues[i][j];
-}
-
-void Matrix::multiplyWith(Matrix &otherMatrix) {
-
-    double **otherValues = otherMatrix.matrixValues;
-    auto **copyValues = new double *[matrixIndex];
-    for (int i = 0; i < this->matrixIndex; i++) {
-        copyValues[i] = new double[matrixIndex];
+Matrix Matrix::sumWith(Matrix &otherMatrix) {
+    if (otherMatrix.getIndex() == this->getIndex()) {
+        Matrix sumMatrix;
+        sumMatrix.matrixIndex = this->matrixIndex;
+        sumMatrix.matrixValues = new double *[sumMatrix.matrixIndex];
+        memoryExpansion(sumMatrix);
+        for (int i = 0; i < matrixIndex; i++)
+            for (int j = 0; j < matrixIndex; j++)
+                sumMatrix.matrixValues[i][j] = matrixValues[i][j] + otherMatrix.matrixValues[i][j];
+        return sumMatrix;
+    } else {
+        throw exception(ERROR_SIZE_MESSAGE);
     }
-    for (int i = 0; i < this->matrixIndex; i++) {
-        for (int j = 0; j < this->matrixIndex; j++)
-            copyValues[i][j] = this->matrixValues[i][j];
+}
+
+Matrix Matrix::diffWith(Matrix &otherMatrix) {
+    if (otherMatrix.getIndex() == this->getIndex()) {
+        Matrix sumMatrix;
+        sumMatrix.matrixIndex = this->matrixIndex;
+        sumMatrix.matrixValues = new double *[sumMatrix.matrixIndex];
+        memoryExpansion(sumMatrix);
+        for (int i = 0; i < matrixIndex; i++)
+            for (int j = 0; j < matrixIndex; j++)
+                sumMatrix.matrixValues[i][j] = matrixValues[i][j] - otherMatrix.matrixValues[i][j];
+        return sumMatrix;
+    } else {
+        throw exception(ERROR_SIZE_MESSAGE);
     }
-    for (int i = 0; i < this->matrixIndex; i++) {
-        for (int j = 0; j < this->matrixIndex; j++) {
-            matrixValues[i][j] = 0;
-            for (int k = 0; k < this->matrixIndex; k++)
-                this->matrixValues[i][j] += copyValues[i][k] * otherValues[k][j];
+}
+
+Matrix Matrix::multiplyWith(Matrix &otherMatrix) {
+    if (otherMatrix.getIndex() == this->getIndex()) {
+        Matrix multMatrix;
+        multMatrix.matrixIndex = this->matrixIndex;
+        multMatrix.matrixValues = new double *[multMatrix.matrixIndex];
+        memoryExpansion(multMatrix);
+        for (int i = 0; i < this->matrixIndex; i++) {
+            for (int j = 0; j < this->matrixIndex; j++) {
+                matrixValues[i][j] = 0;
+                for (int k = 0; k < this->matrixIndex; k++)
+                    multMatrix.matrixValues[i][j] += matrixValues[i][k] * otherMatrix.matrixValues[k][j];
+            }
         }
+        return multMatrix;
+    } else {
+        throw exception(ERROR_SIZE_MESSAGE);
     }
-    delete[] copyValues;
-
 }
 
-void Matrix::invert() noexcept(false) {
+Matrix &Matrix::invert() noexcept(false) {
     if (getDeterminant() != 0) {
         double **matrix = matrixValues;
         int index = matrixIndex;
@@ -248,6 +231,7 @@ void Matrix::invert() noexcept(false) {
             for (int j = 0; j < index; j++)
                 matrix[i][j] = invertValues[i][j];
         delete[] invertValues;
+        return *this;
     } else {
         throw std::exception(ERROR_INVERTING_MESSAGE);
     }
@@ -295,4 +279,43 @@ void Matrix::memoryExpansion(Matrix &matrix) {
             matrix.matrixValues[i][j] = 0;
         }
     }
+}
+
+Matrix &Matrix::resize(int newIndex) {
+    Matrix newMatrix;
+    newMatrix.matrixIndex = newIndex;
+    newMatrix.matrixValues = new double *[newMatrix.matrixIndex];
+    for (int i = 0; i < newMatrix.matrixIndex; i++) {
+        newMatrix.matrixValues[i] = new double[newMatrix.matrixIndex];
+        for (int j = 0; j < newMatrix.matrixIndex; j++) {
+            if (i < this->matrixIndex && j < this->matrixIndex) {
+                newMatrix.matrixValues[i][j] = this->matrixValues[i][j];
+            } else {
+                newMatrix.matrixValues[i][j] = 0;
+            }
+        }
+    }
+    *this = newMatrix;
+    return *this;
+}
+
+double Matrix::getValue(int i, int j) {
+    return this->matrixValues[i][j];
+}
+
+Matrix::Row Matrix::operator[](int i) {
+    Row row(matrixValues[i]);
+    return row;
+}
+
+double **Matrix::getValues() {
+    return this->matrixValues;
+}
+
+Matrix::Row::Row(double *rows) {
+    this->rows = rows;
+}
+
+double &Matrix::Row::operator[](int j) {
+    return this->rows[j];
 }

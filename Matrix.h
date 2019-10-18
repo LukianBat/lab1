@@ -6,23 +6,32 @@
 using namespace std;
 
 class Matrix {
+public:
+    static int count;
 private:
     int matrixIndex;
+
     double **matrixValues;
 
     double calculateDeterminant(double **values, int index);
 
     void memoryExpansion(Matrix &matrix);
 
-    void sumWith(Matrix &otherMatrix);
+    class Row {
 
-    void diffWith(Matrix &otherMatrix);
+    public:
+        double *rows;
+    public:
+        Row(double *rows);
 
-    void multiplyWith(Matrix &otherMatrix);
+        double &operator[](int j);
+
+    };
 
 public:
-
     Matrix();
+
+    Matrix sumWith(Matrix &otherMatrix) noexcept(false);
 
     explicit Matrix(int index);
 
@@ -32,15 +41,13 @@ public:
 
     Matrix &operator=(const Matrix &matrix);
 
-    Matrix operator+(Matrix &matrix) noexcept(false);
+    Matrix operator+(Matrix &matrix);
 
-    Matrix operator-(Matrix &matrix) noexcept(false);
+    Matrix operator-(Matrix &matrix);
 
-    Matrix operator*(Matrix &matrix) noexcept(false);
+    Matrix operator*(Matrix &matrix);
 
-    const double *operator[](int index) const;
-
-    double *operator[](int index);
+    Row operator[](int i);
 
     double operator()();
 
@@ -54,11 +61,19 @@ public:
 
     int getIndex();
 
-    void transpose();
+    Matrix &transpose();
+
+    Matrix &resize(int newIndex);
+
+    Matrix diffWith(Matrix &otherMatrix);
+
+    Matrix multiplyWith(Matrix &otherMatrix);
 
     double **getValues();
 
-    void invert();
+    double getValue(int i, int j);
+
+    Matrix &invert();
 
     double getDeterminant();
 

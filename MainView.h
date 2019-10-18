@@ -8,6 +8,7 @@ class MainView {
 private:
     void startMenu();
 
+    bool checkInVector(int current);
 public:
     MainView();
 };
