@@ -15,18 +15,6 @@ Matrix::Matrix() {
     matrixValues = nullptr;
 }
 
-Matrix::Matrix(int index) {
-    Matrix::count++;
-    matrixIndex = index;
-    matrixValues = new double *[matrixIndex];
-    for (int i = 0; i < matrixIndex; i++) {
-        matrixValues[i] = new double[matrixIndex];
-        for (int j = 0; j < matrixIndex; j++) {
-            matrixValues[i][j] = 1;
-        }
-    }
-}
-
 Matrix::Matrix(int index, double **values) {
     Matrix::count++;
     matrixIndex = index;
@@ -154,7 +142,7 @@ Matrix &Matrix::transpose() {
 }
 
 Matrix Matrix::sumWith(Matrix &otherMatrix) {
-    if (otherMatrix.getIndex() == this->getIndex()) {
+    if (otherMatrix.matrixIndex == matrixIndex) {
         Matrix sumMatrix;
         sumMatrix.matrixIndex = this->matrixIndex;
         sumMatrix.matrixValues = new double *[sumMatrix.matrixIndex];
@@ -169,7 +157,7 @@ Matrix Matrix::sumWith(Matrix &otherMatrix) {
 }
 
 Matrix Matrix::diffWith(Matrix &otherMatrix) {
-    if (otherMatrix.getIndex() == this->getIndex()) {
+    if (otherMatrix.matrixIndex == matrixIndex) {
         Matrix sumMatrix;
         sumMatrix.matrixIndex = this->matrixIndex;
         sumMatrix.matrixValues = new double *[sumMatrix.matrixIndex];
@@ -184,7 +172,7 @@ Matrix Matrix::diffWith(Matrix &otherMatrix) {
 }
 
 Matrix Matrix::multiplyWith(Matrix &otherMatrix) {
-    if (otherMatrix.getIndex() == this->getIndex()) {
+    if (otherMatrix.matrixIndex == matrixIndex) {
         Matrix multMatrix;
         multMatrix.matrixIndex = this->matrixIndex;
         multMatrix.matrixValues = new double *[multMatrix.matrixIndex];
@@ -268,9 +256,7 @@ double Matrix::calculateDeterminant(double **values, int index) {
 
 }
 
-int Matrix::getIndex() {
-    return matrixIndex;
-}
+
 
 void Matrix::memoryExpansion(Matrix &matrix) {
     for (int i = 0; i < matrix.matrixIndex; i++) {
@@ -299,18 +285,31 @@ Matrix &Matrix::resize(int newIndex) {
     return *this;
 }
 
-double Matrix::getValue(int i, int j) {
-    return this->matrixValues[i][j];
-}
-
 Matrix::Row Matrix::operator[](int i) {
     Row row(matrixValues[i]);
     return row;
 }
 
-double **Matrix::getValues() {
-    return this->matrixValues;
+void Matrix::outputInBinaryFile(ofstream &file) {
+    int index = matrixIndex;
+    double **values = matrixValues;
+    file.write((char *) &index, sizeof(int));
+    for (int i = 0; i < index; i++) {
+        file.write((char *) values[i], sizeof(double) * index);
+    }
 }
+
+Matrix Matrix::inputFromBinaryFile(ifstream &file) {
+    int index;
+    file.read((char *) &index, sizeof(int));
+    auto **values = new double *[index];
+    for (int i = 0; i < index; i++) {
+        values[i] = new double[index];
+        file.read((char *) values[i], sizeof(double) * index);
+    }
+    return Matrix(index, values);
+}
+
 
 Matrix::Row::Row(double *rows) {
     this->rows = rows;

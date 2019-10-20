@@ -2,8 +2,9 @@
 #include <fstream>
 #include "MainView.h"
 #include "Matrix.h"
+#include "SingleMatrix.h"
+#include "RectangleMatrix.h"
 #include <vector>
-#include <limits>
 
 const char *INPUT_TEXT = "input matrix   ";
 const char *TRANSPOSE_TEXT = "'1'- to transpose matrix;    ";
@@ -26,13 +27,13 @@ const int GET_MATRIX_CODE = 8;
 const char *NEW_INPUT_TEXT = "'9' - to input new matrix   ";
 const int NEW_INPUT_CODE = 9;
 const char *INPUT_FILE_TEXT = "'10' - to input in the file   ";
-const int INPUT_FILE_CODE = 10;
+const int OUTPUT_IN_FILE_CODE = 10;
 const char *OUTPUT_FILE_TEXT = "'11' - to output from file   ";
-const int OUTPUT_FILE_CODE = 11;
+const int INPUT_FROM_FILE_CODE = 11;
 const char *INPUT_BINARY_FILE_TEXT = "'12' - to input in the binary file   ";
-const int INPUT_BINARY_FILE_CODE = 12;
+const int OUTPUT_IN_BINARY_FILE_CODE = 12;
 const char *OUTPUT_BINARY_FILE_TEXT = "'13' - to output from binary file   ";
-const int OUTPUT_BINARY_FILE_CODE = 13;
+const int INPUT_FROM_BINARY_FILE_CODE = 13;
 const char *RESIZE_TEXT = "'14' - to resize matrix      ";
 const int RESIZE_CODE = 14;
 const char *EXIT_TEXT = "'0' - to exit   ";
@@ -59,12 +60,12 @@ void MainView::startMenu() {
     cout << "input number of matrix" << endl;
     cin >> counter;
     bool secState = true;
-    vector<Matrix> matrixVector;
+    vector<RectangleMatrix> matrixVector;
     matrixVector.reserve(counter);
     for (int i = 0; i < counter; ++i) {
         cout << ADD_TEXT << endl;
         arrayIndex++;
-        Matrix matrix;
+        RectangleMatrix matrix;
         cin >> matrix;
         matrixVector.push_back(matrix);
     }
@@ -112,7 +113,7 @@ void MainView::startMenu() {
                 if (checkInVector(currentMatrixNumber) && checkInVector(operationMatrixNumber))
                     try {
                         counter++;
-                        Matrix matrix =
+                        RectangleMatrix matrix =
                                 matrixVector.at(currentMatrixNumber) + (matrixVector.at(operationMatrixNumber));
                         cout << matrix << endl;
                         cout << endl;
@@ -133,7 +134,8 @@ void MainView::startMenu() {
 
                     try {
                         counter++;
-                        Matrix matrix = matrixVector.at(currentMatrixNumber) - (matrixVector.at(operationMatrixNumber));
+                        RectangleMatrix matrix =
+                                matrixVector.at(currentMatrixNumber) - (matrixVector.at(operationMatrixNumber));
                         cout << matrix << endl;
                         cout << endl;
                     } catch (exception ex) {
@@ -152,7 +154,8 @@ void MainView::startMenu() {
                 if (checkInVector(currentMatrixNumber) && checkInVector(operationMatrixNumber))
                     try {
                         counter++;
-                        Matrix matrix = matrixVector.at(currentMatrixNumber) * (matrixVector.at(operationMatrixNumber));
+                        RectangleMatrix matrix =
+                                matrixVector.at(currentMatrixNumber) * (matrixVector.at(operationMatrixNumber));
                         cout << matrix << endl;
                         cout << endl;
                     } catch (exception ex) {
@@ -163,18 +166,18 @@ void MainView::startMenu() {
                 break;
             }
             case INVERT_CODE: {
-                cout << "input Matrix number" << endl;
-                cin >> currentMatrixNumber;
-                if (checkInVector(currentMatrixNumber))
-                    try {
-                        cout << matrixVector.at(currentMatrixNumber).invert() << endl;
-                        cout << endl;
-                    } catch (exception exc) {
-                        cout << exc.what() << endl;
-                    }
-                else
-                    cout << INPUT_ERROR_TEXT;
-                break;
+//                cout << "input Matrix number" << endl;
+//                cin >> currentMatrixNumber;
+//                if (checkInVector(currentMatrixNumber))
+//                    try {
+//                        cout << matrixVector.at(currentMatrixNumber).invert() << endl;
+//                        cout << endl;
+//                    } catch (exception exc) {
+//                        cout << exc.what() << endl;
+//                    }
+//                else
+//                    cout << INPUT_ERROR_TEXT;
+//                break;
             }
             case OUTPUT_CODE: {
                 cout << "input Matrix number" << endl;
@@ -187,26 +190,26 @@ void MainView::startMenu() {
                 break;
             }
             case DETERMINANT_CODE: {
-                cout << "input Matrix number" << endl;
-                cin >> currentMatrixNumber;
-                if (checkInVector(currentMatrixNumber))
-                    cout << matrixVector.at(currentMatrixNumber).getDeterminant() << endl;
-                else
-                    cout << INPUT_ERROR_TEXT;
-                break;
+//                cout << "input Matrix number" << endl;
+//                cin >> currentMatrixNumber;
+//                if (checkInVector(currentMatrixNumber))
+//                    cout << matrixVector.at(currentMatrixNumber).getDeterminant() << endl;
+//                else
+//                    cout << INPUT_ERROR_TEXT;
+//                break;
             }
             case NEW_INPUT_CODE: {
                 cout << "input Matrix number" << endl;
                 cin >> currentMatrixNumber;
                 if (checkInVector(currentMatrixNumber)) {
-                    Matrix *matrix = &matrixVector.at(currentMatrixNumber);
+                    RectangleMatrix *matrix = &matrixVector.at(currentMatrixNumber);
                     cin >> *matrix;
                 } else
                     cout << INPUT_ERROR_TEXT;
                 break;
             }
-            case INPUT_FILE_CODE: {
-                ofstream file(FILE_NAME);
+            case OUTPUT_IN_FILE_CODE: {
+                ofstream file(FILE_NAME, ios::out);
                 if (!file) {
                     cout << OPEN_FILE_ERROR << endl;
                     break;
@@ -220,8 +223,8 @@ void MainView::startMenu() {
                 file.close();
                 break;
             }
-            case OUTPUT_FILE_CODE: {
-                ifstream file(FILE_NAME);
+            case INPUT_FROM_FILE_CODE: {
+                ifstream file(FILE_NAME, ios::in);
                 if (!file) {
                     cout << OPEN_FILE_ERROR << endl;
                     break;
@@ -229,7 +232,7 @@ void MainView::startMenu() {
                 int fileCounter;
                 file >> fileCounter;
                 for (int i = 0; i < fileCounter; i++) {
-                    Matrix matrix;
+                    RectangleMatrix matrix;
                     file >> matrix;
                     matrixVector.push_back(matrix);
                 }
@@ -237,8 +240,8 @@ void MainView::startMenu() {
                 file.close();
                 break;
             }
-            case INPUT_BINARY_FILE_CODE: {
-                ofstream file(BINARY_FILE_NAME, ios::binary);
+            case OUTPUT_IN_BINARY_FILE_CODE: {
+                ofstream file(BINARY_FILE_NAME, ios::binary | ios::out);
                 if (!file) {
                     cout << OPEN_FILE_ERROR << endl;
                     break;
@@ -246,23 +249,14 @@ void MainView::startMenu() {
                 if (counter != 0) {
                     file.write((char *) &counter, sizeof(int));
                     for (auto &matrix : matrixVector) {
-                        int index = matrix.getIndex();
-                        double **values = matrix.getValues();
-                        file.write((char *) &index, sizeof(int));
-                        for (int i = 0; i < index; i++) {
-                            double *row = values[i];
-                            for (int j = 0; j < index; j++) {
-                                double value = row[j];
-                                file.write((char *) &value, sizeof(double));
-                            }
-                        }
+                        matrix.outputInBinaryFile(file);
                     }
                 } else cout << "  Empty!  " << endl;
                 file.close();
                 break;
             }
-            case OUTPUT_BINARY_FILE_CODE: {
-                ifstream file(BINARY_FILE_NAME, ios::binary);
+            case INPUT_FROM_BINARY_FILE_CODE: {
+                ifstream file(BINARY_FILE_NAME, ios::binary | ios::in);
                 if (!file) {
                     cout << OPEN_FILE_ERROR << endl;
                     break;
@@ -270,50 +264,39 @@ void MainView::startMenu() {
                 int fileCounter;
                 file.read((char *) &fileCounter, sizeof(int));
                 for (int i = 0; i < fileCounter; i++) {
-                    int index;
-                    file.read((char *) &index, sizeof(int));
-                    auto **values = new double *[index];
-                    for (int j = 0; j < index; j++) {
-                        auto *row = new double[index];
-                        values[j] = row;
-                        for (int k = 0; k < index; k++) {
-                            double value;
-                            file.read((char *) &value, sizeof(double));
-                            row[k] = value;
-                        }
-                    }
-                    matrixVector.push_back(Matrix(index, values));
+                    RectangleMatrix matrix = RectangleMatrix::inputFromBinaryFile(file);
+                    matrixVector.push_back(matrix);
                 }
                 counter += fileCounter;
                 file.close();
                 break;
             }
             case GET_MATRIX_CODE: {
-                cout << "input Matrix number" << endl;
-                cin >> currentMatrixNumber;
-                if (checkInVector(currentMatrixNumber)) {
-                    int i, j;
-                    cout << "input i and j";
-                    cin >> i >> j;
-                    Matrix &matrix = matrixVector.at(currentMatrixNumber);
-                    //double d = matrix->operator[](i).operator[](j);
-                    double c = matrix[i][j];
-                    cout << "c = " << c << endl;
-                    matrix[i][j] = 1.2345;
-                    cout << matrix[i][j] << endl;
-                } else
-                    cout << INPUT_ERROR_TEXT;
-                break;
+//                cout << "input Matrix number" << endl;
+//                cin >> currentMatrixNumber;
+//                if (checkInVector(currentMatrixNumber)) {
+//                    int i, j;
+//                    cout << "input i and j";
+//                    cin >> i >> j;
+//                    Matrix &matrix = matrixVector.at(currentMatrixNumber);
+//                    //double d = matrix->operator[](i).operator[](j);
+//                    double c = matrix[i][j];
+//                    cout << "c = " << c << endl;
+//                    matrix[i][j] = 1.2345;
+//                    cout << matrix[i][j] << endl;
+//                } else
+//                    cout << INPUT_ERROR_TEXT;
+//                break;
             }
             case RESIZE_CODE: {
                 cout << "input Matrix number" << endl;
                 cin >> currentMatrixNumber;
                 if (checkInVector(currentMatrixNumber)) {
-                    int newIndex;
-                    cin >> newIndex;
-                    Matrix *matrix;
+                    int newColumn, newRow;
+                    cin >> newColumn >> newRow;
+                    RectangleMatrix *matrix;
                     matrix = &matrixVector.at(currentMatrixNumber);
-                    cout << matrix->resize(newIndex) << endl;
+                    cout << matrix->resize(newColumn, newRow) << endl;
                     cout << endl;
                 } else
                     cout << INPUT_ERROR_TEXT;
@@ -321,7 +304,7 @@ void MainView::startMenu() {
             }
             case ADD_NEW_MATRIX_CODE: {
                 cout << INPUT_TEXT << endl;
-                Matrix matrix;
+                RectangleMatrix matrix;
                 cin >> matrix;
                 matrixVector.push_back(matrix);
                 counter++;
