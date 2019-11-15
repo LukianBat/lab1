@@ -54,20 +54,63 @@ int counter;
 
 void MainView::startMenu() {
 
+    cout << "square matrix - 0 " << endl << "single matrix 1 " << endl << "rectangle matrix 2 ";
+    int matrixCode;
+    cin >> matrixCode;
     int code;
     int arrayIndex = 0;
     int currentMatrixNumber = 0;
     cout << "input number of matrix" << endl;
     cin >> counter;
     bool secState = true;
-    vector<RectangleMatrix> matrixVector;
-    matrixVector.reserve(counter);
-    for (int i = 0; i < counter; ++i) {
-        cout << ADD_TEXT << endl;
-        arrayIndex++;
-        RectangleMatrix matrix;
-        cin >> matrix;
-        matrixVector.push_back(matrix);
+    vector<RectangleMatrix> rectangleMatrixVector;
+    vector<SingleMatrix> singleMatrixVector;
+    vector<Matrix> matrixVector;
+    switch (matrixCode) {
+        case 2: {
+            rectangleMatrixVector.reserve(counter);
+            for (int i = 0; i < counter; ++i) {
+                cout << ADD_TEXT << endl;
+                arrayIndex++;
+                RectangleMatrix matrix;
+                cin >> matrix;
+                rectangleMatrixVector.push_back(matrix);
+            }
+            break;
+        }
+        case 0: {
+            matrixVector.reserve(counter);
+            for (int i = 0; i < counter; ++i) {
+                cout << ADD_TEXT << endl;
+                arrayIndex++;
+                Matrix matrix;
+                cin >> matrix;
+                matrixVector.push_back(matrix);
+            }
+            break;
+        }
+        case 1: {
+            singleMatrixVector.reserve(counter);
+            for (int i = 0; i < counter; ++i) {
+                cout << ADD_TEXT << endl;
+                arrayIndex++;
+                SingleMatrix matrix;
+                cin >> matrix;
+                singleMatrixVector.push_back(matrix);
+            }
+            break;
+        }
+        default: {
+            matrixVector.reserve(counter);
+            for (int i = 0; i < counter; ++i) {
+                cout << ADD_TEXT << endl;
+                arrayIndex++;
+                Matrix matrix;
+                cin >> matrix;
+                matrixVector.push_back(matrix);
+            }
+            break;
+        }
     }
     while (secState) {
         cout
@@ -98,9 +141,24 @@ void MainView::startMenu() {
             case TRANSPOSE_CODE: {
                 cout << "input Matrix number" << endl;
                 cin >> currentMatrixNumber;
-                if (checkInVector(currentMatrixNumber))
-                    cout << matrixVector.at(currentMatrixNumber).transpose() << endl;
-                else
+                if (checkInVector(currentMatrixNumber)) {
+                    switch (matrixCode) {
+                        case 2: {
+                            cout << rectangleMatrixVector.at(currentMatrixNumber).transpose() << endl;
+                            break;
+                        }
+                        case 0: {
+                            cout << matrixVector.at(currentMatrixNumber).transpose() << endl;
+                            break;
+                        }
+                        case 1: {
+                            cout << singleMatrixVector.at(currentMatrixNumber).transpose() << endl;
+                            break;
+                        }
+                        default:
+                            cout << matrixVector.at(currentMatrixNumber).transpose() << endl;
+                    }
+                } else
                     cout << INPUT_ERROR_TEXT;
                 break;
             }
@@ -113,10 +171,39 @@ void MainView::startMenu() {
                 if (checkInVector(currentMatrixNumber) && checkInVector(operationMatrixNumber))
                     try {
                         counter++;
-                        RectangleMatrix matrix =
-                                matrixVector.at(currentMatrixNumber) + (matrixVector.at(operationMatrixNumber));
-                        cout << matrix << endl;
-                        cout << endl;
+
+                        switch (matrixCode) {
+                            case 2: {
+                                RectangleMatrix matrix =
+                                        rectangleMatrixVector.at(currentMatrixNumber) +
+                                        (rectangleMatrixVector.at(operationMatrixNumber));
+                                cout << matrix << endl;
+                                cout << endl;
+                                break;
+                            }
+                            case 0: {
+                                Matrix matrix =
+                                        matrixVector.at(currentMatrixNumber) +
+                                        (matrixVector.at(operationMatrixNumber));
+                                cout << matrix << endl;
+                                cout << endl;
+                                break;
+                            }
+                            case 1: {
+                                Matrix matrix =
+                                        singleMatrixVector.at(currentMatrixNumber) +
+                                        (singleMatrixVector.at(operationMatrixNumber));
+                                cout << matrix << endl;
+                                cout << endl;
+                                break;
+                            }
+                            default:
+                                Matrix matrix =
+                                        matrixVector.at(currentMatrixNumber) +
+                                        (matrixVector.at(operationMatrixNumber));
+                                cout << matrix << endl;
+                                cout << endl;
+                        }
                     } catch (exception ex) {
                         cout << ex.what() << endl;
                     }
@@ -134,10 +221,38 @@ void MainView::startMenu() {
 
                     try {
                         counter++;
-                        RectangleMatrix matrix =
-                                matrixVector.at(currentMatrixNumber) - (matrixVector.at(operationMatrixNumber));
-                        cout << matrix << endl;
-                        cout << endl;
+                        switch (matrixCode) {
+                            case 2: {
+                                RectangleMatrix matrix =
+                                        rectangleMatrixVector.at(currentMatrixNumber) -
+                                        (rectangleMatrixVector.at(operationMatrixNumber));
+                                cout << matrix << endl;
+                                cout << endl;
+                                break;
+                            }
+                            case 0: {
+                                Matrix matrix =
+                                        matrixVector.at(currentMatrixNumber) -
+                                        (matrixVector.at(operationMatrixNumber));
+                                cout << matrix << endl;
+                                cout << endl;
+                                break;
+                            }
+                            case 1: {
+                                Matrix matrix =
+                                        singleMatrixVector.at(currentMatrixNumber) -
+                                        (singleMatrixVector.at(operationMatrixNumber));
+                                cout << matrix << endl;
+                                cout << endl;
+                                break;
+                            }
+                            default:
+                                Matrix matrix =
+                                        matrixVector.at(currentMatrixNumber) -
+                                        (matrixVector.at(operationMatrixNumber));
+                                cout << matrix << endl;
+                                cout << endl;
+                        }
                     } catch (exception ex) {
                         cout << ex.what() << endl;
                     }
@@ -154,10 +269,38 @@ void MainView::startMenu() {
                 if (checkInVector(currentMatrixNumber) && checkInVector(operationMatrixNumber))
                     try {
                         counter++;
-                        RectangleMatrix matrix =
-                                matrixVector.at(currentMatrixNumber) * (matrixVector.at(operationMatrixNumber));
-                        cout << matrix << endl;
-                        cout << endl;
+                        switch (matrixCode) {
+                            case 2: {
+                                RectangleMatrix matrix =
+                                        rectangleMatrixVector.at(currentMatrixNumber) *
+                                        (rectangleMatrixVector.at(operationMatrixNumber));
+                                cout << matrix << endl;
+                                cout << endl;
+                                break;
+                            }
+                            case 0: {
+                                Matrix matrix =
+                                        matrixVector.at(currentMatrixNumber) *
+                                        (matrixVector.at(operationMatrixNumber));
+                                cout << matrix << endl;
+                                cout << endl;
+                                break;
+                            }
+                            case 1: {
+                                Matrix matrix =
+                                        singleMatrixVector.at(currentMatrixNumber) *
+                                        (singleMatrixVector.at(operationMatrixNumber));
+                                cout << matrix << endl;
+                                cout << endl;
+                                break;
+                            }
+                            default:
+                                Matrix matrix =
+                                        matrixVector.at(currentMatrixNumber) *
+                                        (matrixVector.at(operationMatrixNumber));
+                                cout << matrix << endl;
+                                cout << endl;
+                        }
                     } catch (exception ex) {
                         cout << ex.what() << endl;
                     }
@@ -166,44 +309,109 @@ void MainView::startMenu() {
                 break;
             }
             case INVERT_CODE: {
-//                cout << "input Matrix number" << endl;
-//                cin >> currentMatrixNumber;
-//                if (checkInVector(currentMatrixNumber))
-//                    try {
-//                        cout << matrixVector.at(currentMatrixNumber).invert() << endl;
-//                        cout << endl;
-//                    } catch (exception exc) {
-//                        cout << exc.what() << endl;
-//                    }
-//                else
-//                    cout << INPUT_ERROR_TEXT;
-//                break;
+                cout << "input Matrix number" << endl;
+                cin >> currentMatrixNumber;
+                if (checkInVector(currentMatrixNumber) && matrixCode != 2)
+                    try {
+                        switch (matrixCode) {
+                            case 0:
+                                cout << matrixVector.at(currentMatrixNumber).invert() << endl;
+                                cout << endl;
+                                break;
+                            case 1: {
+                                cout << singleMatrixVector.at(currentMatrixNumber).invert() << endl;
+                                cout << endl;
+                                break;
+                            }
+                            default: {
+                                cout << singleMatrixVector.at(currentMatrixNumber).invert() << endl;
+                                cout << endl;
+                                break;
+                            }
+                        }
+                    } catch (exception exc) {
+                        cout << exc.what() << endl;
+                    }
+                else
+                    cout << INPUT_ERROR_TEXT;
+                break;
             }
             case OUTPUT_CODE: {
                 cout << "input Matrix number" << endl;
                 cin >> currentMatrixNumber;
                 if (checkInVector(currentMatrixNumber)) {
-                    cout << matrixVector.at(currentMatrixNumber) << endl;
-                    cout << endl;
+                    switch (matrixCode) {
+                        case 0:
+                            cout << matrixVector.at(currentMatrixNumber) << endl;
+                            cout << endl;
+                            break;
+                        case 1: {
+                            cout << singleMatrixVector.at(currentMatrixNumber) << endl;
+                            cout << endl;
+                            break;
+                        }
+                        case 2: {
+                            cout << rectangleMatrixVector.at(currentMatrixNumber) << endl;
+                            cout << endl;
+                        }
+                        default: {
+                            cout << matrixVector.at(currentMatrixNumber).invert() << endl;
+                            cout << endl;
+                            break;
+                        }
+                    }
                 } else
                     cout << INPUT_ERROR_TEXT;
                 break;
             }
             case DETERMINANT_CODE: {
-//                cout << "input Matrix number" << endl;
-//                cin >> currentMatrixNumber;
-//                if (checkInVector(currentMatrixNumber))
-//                    cout << matrixVector.at(currentMatrixNumber).getDeterminant() << endl;
-//                else
-//                    cout << INPUT_ERROR_TEXT;
-//                break;
+                cout << "input Matrix number" << endl;
+                cin >> currentMatrixNumber;
+                if (checkInVector(currentMatrixNumber) && matrixCode != 2) {
+                    switch (matrixCode) {
+                        case 0:
+                            cout << matrixVector.at(currentMatrixNumber).getDeterminant() << endl;
+                            cout << endl;
+                            break;
+                        case 1: {
+                            cout << singleMatrixVector.at(currentMatrixNumber).getDeterminant() << endl;
+                            cout << endl;
+                            break;
+                        }
+                        default: {
+                            cout << matrixVector.at(currentMatrixNumber).getDeterminant() << endl;
+                            cout << endl;
+                            break;
+                        }
+                    }
+                } else
+                    cout << INPUT_ERROR_TEXT;
+                break;
             }
             case NEW_INPUT_CODE: {
                 cout << "input Matrix number" << endl;
                 cin >> currentMatrixNumber;
                 if (checkInVector(currentMatrixNumber)) {
-                    RectangleMatrix *matrix = &matrixVector.at(currentMatrixNumber);
-                    cin >> *matrix;
+                    switch (matrixCode) {
+                        case 2: {
+                            RectangleMatrix *matrix = &rectangleMatrixVector.at(currentMatrixNumber);
+                            cin >> *matrix;
+                            break;
+                        }
+                        case 0: {
+                            Matrix *matrix = &matrixVector.at(currentMatrixNumber);
+                            cin >> *matrix;
+                            break;
+                        }
+                        case 1: {
+                            SingleMatrix *matrix = &singleMatrixVector.at(currentMatrixNumber);
+                            cin >> *matrix;
+                            break;
+                        }
+                        default:
+                            Matrix *matrix = &matrixVector.at(currentMatrixNumber);
+                            cin >> *matrix;
+                    }
                 } else
                     cout << INPUT_ERROR_TEXT;
                 break;
@@ -216,8 +424,29 @@ void MainView::startMenu() {
                 }
                 if (counter != 0) {
                     file << counter << "\n";
-                    for (auto &matrix : matrixVector) {
-                        file << matrix;
+                    switch (matrixCode) {
+                        case 2: {
+                            for (auto &matrix : rectangleMatrixVector) {
+                                file << matrix;
+                            }
+                            break;
+                        }
+                        case 0: {
+                            for (auto &matrix : matrixVector) {
+                                file << matrix;
+                            }
+                            break;
+                        }
+                        case 1: {
+                            for (auto &matrix : singleMatrixVector) {
+                                file << matrix;
+                            }
+                            break;
+                        }
+                        default:
+                            for (auto &matrix : matrixVector) {
+                                file << matrix;
+                            }
                     }
                 } else cout << "  Empty!  " << endl;
                 file.close();
@@ -231,10 +460,37 @@ void MainView::startMenu() {
                 }
                 int fileCounter;
                 file >> fileCounter;
-                for (int i = 0; i < fileCounter; i++) {
-                    RectangleMatrix matrix;
-                    file >> matrix;
-                    matrixVector.push_back(matrix);
+                switch (matrixCode) {
+                    case 2: {
+                        for (int i = 0; i < fileCounter; i++) {
+                            RectangleMatrix matrix;
+                            file >> matrix;
+                            rectangleMatrixVector.push_back(matrix);
+                        }
+                        break;
+                    }
+                    case 0: {
+                        for (int i = 0; i < fileCounter; i++) {
+                            Matrix matrix;
+                            file >> matrix;
+                            matrixVector.push_back(matrix);
+                        }
+                        break;
+                    }
+                    case 1: {
+                        for (int i = 0; i < fileCounter; i++) {
+                            SingleMatrix matrix;
+                            file >> matrix;
+                            singleMatrixVector.push_back(matrix);
+                        }
+                        break;
+                    }
+                    default:
+                        for (int i = 0; i < fileCounter; i++) {
+                            Matrix matrix;
+                            file >> matrix;
+                            matrixVector.push_back(matrix);
+                        }
                 }
                 counter += fileCounter;
                 file.close();
@@ -248,8 +504,29 @@ void MainView::startMenu() {
                 }
                 if (counter != 0) {
                     file.write((char *) &counter, sizeof(int));
-                    for (auto &matrix : matrixVector) {
-                        matrix.outputInBinaryFile(file);
+                    switch (matrixCode) {
+                        case 2: {
+                            for (auto &matrix : rectangleMatrixVector) {
+                                matrix.outputInBinaryFile(file);
+                            }
+                            break;
+                        }
+                        case 0: {
+                            for (auto &matrix : matrixVector) {
+                                matrix.outputInBinaryFile(file);
+                            }
+                            break;
+                        }
+                        case 1: {
+                            for (auto &matrix : singleMatrixVector) {
+                                matrix.outputInBinaryFile(file);
+                            }
+                            break;
+                        }
+                        default:
+                            for (auto &matrix : matrixVector) {
+                                matrix.outputInBinaryFile(file);
+                            }
                     }
                 } else cout << "  Empty!  " << endl;
                 file.close();
@@ -263,9 +540,33 @@ void MainView::startMenu() {
                 }
                 int fileCounter;
                 file.read((char *) &fileCounter, sizeof(int));
-                for (int i = 0; i < fileCounter; i++) {
-                    RectangleMatrix matrix = RectangleMatrix::inputFromBinaryFile(file);
-                    matrixVector.push_back(matrix);
+                switch (matrixCode) {
+                    case 2: {
+                        for (int i = 0; i < fileCounter; i++) {
+                            RectangleMatrix matrix = RectangleMatrix::inputFromBinaryFile(file);
+                            rectangleMatrixVector.push_back(matrix);
+                        }
+                        break;
+                    }
+                    case 0: {
+                        for (int i = 0; i < fileCounter; i++) {
+                            Matrix matrix = Matrix::inputFromBinaryFile(file);
+                            matrixVector.push_back(matrix);
+                        }
+                        break;
+                    }
+                    case 1: {
+                        for (int i = 0; i < fileCounter; i++) {
+                            SingleMatrix matrix = SingleMatrix::inputFromBinaryFile(file);
+                            singleMatrixVector.push_back(matrix);
+                        }
+                        break;
+                    }
+                    default:
+                        for (int i = 0; i < fileCounter; i++) {
+                            Matrix matrix = Matrix::inputFromBinaryFile(file);
+                            matrixVector.push_back(matrix);
+                        }
                 }
                 counter += fileCounter;
                 file.close();
@@ -278,7 +579,7 @@ void MainView::startMenu() {
 //                    int i, j;
 //                    cout << "input i and j";
 //                    cin >> i >> j;
-//                    Matrix &matrix = matrixVector.at(currentMatrixNumber);
+//                    Matrix &matrix = rectangleMatrixVector.at(currentMatrixNumber);
 //                    //double d = matrix->operator[](i).operator[](j);
 //                    double c = matrix[i][j];
 //                    cout << "c = " << c << endl;
@@ -293,30 +594,106 @@ void MainView::startMenu() {
                 cin >> currentMatrixNumber;
                 if (checkInVector(currentMatrixNumber)) {
                     int newColumn, newRow;
-                    cin >> newColumn >> newRow;
-                    RectangleMatrix *matrix;
-                    matrix = &matrixVector.at(currentMatrixNumber);
-                    cout << matrix->resize(newColumn, newRow) << endl;
-                    cout << endl;
+                    switch (matrixCode) {
+                        case 2: {
+                            cin >> newColumn >> newRow;
+                            RectangleMatrix *matrix;
+                            matrix = &rectangleMatrixVector.at(currentMatrixNumber);
+                            cout << matrix->resize(newColumn, newRow) << endl;
+                            cout << endl;
+                            break;
+                        }
+                        case 0: {
+                            cin >> newColumn;
+                            Matrix *matrix;
+                            matrix = &matrixVector.at(currentMatrixNumber);
+                            cout << matrix->resize(newColumn) << endl;
+                            cout << endl;
+                            break;
+                        }
+                        case 1: {
+                            cin >> newColumn;
+                            SingleMatrix *matrix;
+                            matrix = &singleMatrixVector.at(currentMatrixNumber);
+                            cout << matrix->resize(newColumn) << endl;
+                            cout << endl;
+                            break;
+                        }
+                        default:
+                            cin >> newColumn;
+                            Matrix *matrix;
+                            matrix = &matrixVector.at(currentMatrixNumber);
+                            cout << matrix->resize(newColumn) << endl;
+                            cout << endl;
+                            break;
+                    }
                 } else
                     cout << INPUT_ERROR_TEXT;
                 break;
             }
             case ADD_NEW_MATRIX_CODE: {
                 cout << INPUT_TEXT << endl;
-                RectangleMatrix matrix;
-                cin >> matrix;
-                matrixVector.push_back(matrix);
+                switch (matrixCode) {
+                    case 2: {
+                        RectangleMatrix matrix;
+                        cin >> matrix;
+                        rectangleMatrixVector.push_back(matrix);
+                        break;
+                    }
+                    case 0: {
+                        Matrix matrix;
+                        cin >> matrix;
+                        matrixVector.push_back(matrix);
+                        break;
+                    }
+                    case 1: {
+                        SingleMatrix matrix;
+                        cin >> matrix;
+                        singleMatrixVector.push_back(matrix);
+                        break;
+                    }
+                    default:
+                        Matrix matrix;
+                        cin >> matrix;
+                        matrixVector.push_back(matrix);
+                }
                 counter++;
                 break;
             }
             case OUTPUT_ALL_CODE: {
                 if (counter != 0) {
                     int j = 0;
-                    for (auto &matrix : matrixVector) {
-                        cout << j << endl;
-                        cout << matrix << endl;
-                        j++;
+                    switch (matrixCode) {
+                        case 2: {
+                            for (auto &matrix : rectangleMatrixVector) {
+                                cout << j << endl;
+                                cout << matrix << endl;
+                                j++;
+                            }
+                            break;
+                        }
+                        case 0: {
+                            for (auto &matrix : matrixVector) {
+                                cout << j << endl;
+                                cout << matrix << endl;
+                                j++;
+                            }
+                            break;
+                        }
+                        case 1: {
+                            for (auto &matrix : singleMatrixVector) {
+                                cout << j << endl;
+                                cout << matrix << endl;
+                                j++;
+                            }
+                            break;
+                        }
+                        default:
+                            for (auto &matrix : matrixVector) {
+                                cout << j << endl;
+                                cout << matrix << endl;
+                                j++;
+                            }
                     }
                 } else cout << "  Empty!  " << endl;
                 break;
